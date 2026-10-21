@@ -71,6 +71,41 @@
             color: #cbd9e6;
             font-size: 14px;
         }
+
+        .pagination {
+            display: flex;
+            gap: 4px;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        /* Пагінація */
+        .pagination li a,
+        .pagination li span {
+            display: block;
+            padding: 4px 10px;
+            font-size: 14px;
+            border: 1px solid #c5d3e0;
+            border-radius: 4px;
+            background: #fff;
+            color: #123b63;
+            text-decoration: none;
+        }
+
+        .pagination li a:hover {
+            background: #e8eff6;
+        }
+
+        .pagination li.active span {
+            background: #123b63;
+            border-color: #123b63;
+            color: #fff;
+        }
+
+        .pagination li.disabled span {
+            color: #9aa9b8;
+            background: #f2f6fa;
+        }
     </style>
 </head>
 
@@ -85,6 +120,7 @@
 
         <nav>
             <a href="{{ url('/') }}">Головна</a>
+            <a href="{{ route('flight.index') }}">Рейси</a>
             <a href="{{ url('/about') }}">Про застосунок</a>
             <a href="{{ url('/contact') }}">Контакти</a>
         </nav>
@@ -94,6 +130,11 @@
 
 
 <main>
+    @if (session('success'))
+        <p style="background:#d4edda; color:#155724; padding:10px; border-radius:5px;">
+            {{ session('success') }}
+        </p>
+    @endif
     @yield('content')
 </main>
 

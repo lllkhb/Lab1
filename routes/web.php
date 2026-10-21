@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
-
+use App\Http\Controllers\FlightController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,3 +22,4 @@ Route::view(
     '/contact',
     'site.contact'
 )->name('site.contact');
+Route::resource('flight', FlightController::class);
