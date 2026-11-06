@@ -29,6 +29,10 @@ class FlightRequest extends FormRequest
             'departure_time'    => ['required', 'date_format:H:i'],
             'arrival_date'      => ['required', 'date', 'after_or_equal:departure_date'],
             'arrival_time'      => ['required', 'date_format:H:i'],
+
+            'departure_airport_en' => ['nullable', 'string', 'min:3', 'max:150'],
+            'arrival_airport_en'   => ['nullable', 'string', 'min:3', 'max:150'],
+            'aircraft_model_en'    => ['nullable', 'string', 'max:100'],
         ];
     }
 

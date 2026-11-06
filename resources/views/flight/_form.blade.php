@@ -1,30 +1,69 @@
-<div>
-    <label for="departure_airport">Аеропорт вильоту</label>
-    <input id="departure_airport" name="departure_airport" type="text" maxlength="150"
-           placeholder="Наприклад: Бориспіль"
-           value="{{ old('departure_airport', $flight->departure_airport ?? '') }}">
-    @error('departure_airport')
-    <p class="error" style="color: red;">{{ $message }}</p>
-    @enderror
-</div>
-<div>
-    <label for="arrival_airport">Аеропорт прибуття</label>
-    <input id="arrival_airport" name="arrival_airport" type="text" maxlength="150"
-           placeholder="Наприклад: Шопен"
-           value="{{ old('arrival_airport', $flight->arrival_airport ?? '') }}">
-    @error('arrival_airport')
-    <p class="error" style="color: red;">{{ $message }}</p>
-    @enderror
-</div>
-<div>
-    <label for="aircraft_model">Модель літака</label>
-    <input id="aircraft_model" name="aircraft_model" type="text" maxlength="100"
-           placeholder="Наприклад: Boeing 737-800"
-           value="{{ old('aircraft_model', $flight->aircraft_model ?? '') }}">
-    @error('aircraft_model')
-    <p class="error" style="color: red;">{{ $message }}</p>
-    @enderror
-</div>
+@php
+    $enTranslation = isset($flight) ? $flight->translations->firstWhere('locale', 'en') : null;
+@endphp
+
+<fieldset style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc;">
+    <legend><strong>Основна мова (Українська — обов'язково)</strong></legend>
+    <div>
+        <label for="departure_airport">Аеропорт вильоту (UK)</label>
+        <input id="departure_airport" name="departure_airport" type="text" maxlength="150"
+               placeholder="Наприклад: Бориспіль"
+               value="{{ old('departure_airport', $flight->departure_airport ?? '') }}">
+        @error('departure_airport')
+        <p class="error" style="color: red;">{{ $message }}</p>
+        @enderror
+    </div>
+    <div>
+        <label for="arrival_airport">Аеропорт прибуття (UK)</label>
+        <input id="arrival_airport" name="arrival_airport" type="text" maxlength="150"
+               placeholder="Наприклад: Шопен"
+               value="{{ old('arrival_airport', $flight->arrival_airport ?? '') }}">
+        @error('arrival_airport')
+        <p class="error" style="color: red;">{{ $message }}</p>
+        @enderror
+    </div>
+    <div>
+        <label for="aircraft_model">Модель літака (UK)</label>
+        <input id="aircraft_model" name="aircraft_model" type="text" maxlength="100"
+               placeholder="Наприклад: Боїнг 737-800"
+               value="{{ old('aircraft_model', $flight->aircraft_model ?? '') }}">
+        @error('aircraft_model')
+        <p class="error" style="color: red;">{{ $message }}</p>
+        @enderror
+    </div>
+</fieldset>
+
+<fieldset style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc;">
+    <legend><strong>Англійський переклад (EN — необов'язково)</strong></legend>
+    <div>
+        <label for="departure_airport_en">Departure Airport (EN)</label>
+        <input id="departure_airport_en" name="departure_airport_en" type="text" maxlength="150"
+               placeholder="Наприклад: Boryspil"
+               value="{{ old('departure_airport_en', $enTranslation->departure_airport ?? '') }}">
+        @error('departure_airport_en')
+        <p class="error" style="color: red;">{{ $message }}</p>
+        @enderror
+    </div>
+    <div>
+        <label for="arrival_airport_en">Arrival Airport (EN)</label>
+        <input id="arrival_airport_en" name="arrival_airport_en" type="text" maxlength="150"
+               placeholder="Наприклад: Chopin"
+               value="{{ old('arrival_airport_en', $enTranslation->arrival_airport ?? '') }}">
+        @error('arrival_airport_en')
+        <p class="error" style="color: red;">{{ $message }}</p>
+        @enderror
+    </div>
+    <div>
+        <label for="aircraft_model_en">Aircraft Model (EN)</label>
+        <input id="aircraft_model_en" name="aircraft_model_en" type="text" maxlength="100"
+               placeholder="Наприклад: Boeing 737-800"
+               value="{{ old('aircraft_model_en', $enTranslation->aircraft_model ?? '') }}">
+        @error('aircraft_model_en')
+        <p class="error" style="color: red;">{$message}</p>
+        @enderror
+    </div>
+</fieldset>
+
 <div>
     <label for="departure_date">Дата вильоту</label>
     <input id="departure_date" name="departure_date" type="date"
