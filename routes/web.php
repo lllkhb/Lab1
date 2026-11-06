@@ -4,6 +4,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\BlogController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,3 +39,8 @@ Route::get(
 )->name('stats.detail');
 Route::get('/stats/flights', [StatsController::class, 'flights']
 )->name('stats.flights');
+Route::get(
+    '/blog/admin',
+    [BlogController::class, 'admin']
+)->name('blog.admin');
+Route::resource('blog', BlogController::class);
