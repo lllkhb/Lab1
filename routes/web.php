@@ -3,6 +3,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\StatsController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -28,3 +30,11 @@ Route::resource(
     'country',
     CountryController::class
 );
+Route::get('/stats',[StatsController::class, 'pages'])
+    ->name('stats.pages');
+Route::get(
+    '/stats/detail',
+    [StatsController::class, 'detail']
+)->name('stats.detail');
+Route::get('/stats/flights', [StatsController::class, 'flights']
+)->name('stats.flights');

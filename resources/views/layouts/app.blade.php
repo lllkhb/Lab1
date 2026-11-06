@@ -123,6 +123,8 @@
             <a href="{{ route('flight.index') }}">Рейси</a>
             <a href="{{ url('/about') }}">Про застосунок</a>
             <a href="{{ url('/contact') }}">Контакти</a>
+            <a href="{{ route('stats.pages') }}">Статистика</a>
+            <a href="{{ route('stats.flights') }}">Популярні рейси</a>
         </nav>
 
     </div>
@@ -150,7 +152,7 @@
     </div>
 
     <div class="footer-text">
-        &copy; {{ date('Y') }} КПІ ім. Ігоря Сікорського
+        Виконала Сидорук Оля, РС-31
     </div>
 
 </footer>
