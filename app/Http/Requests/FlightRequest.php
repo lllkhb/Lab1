@@ -21,7 +21,7 @@ class FlightRequest extends FormRequest
     }
     public function rules(): array
     {
-        return [
+        $rules = [
             'departure_airport' => ['required', 'string', 'min:3', 'max:150'],
             'arrival_airport'   => ['required', 'string', 'min:3', 'max:150', 'different:departure_airport'],
             'aircraft_model'    => ['required', 'string', 'max:100'],
@@ -33,7 +33,16 @@ class FlightRequest extends FormRequest
             'departure_airport_en' => ['nullable', 'string', 'min:3', 'max:150'],
             'arrival_airport_en'   => ['nullable', 'string', 'min:3', 'max:150'],
             'aircraft_model_en'    => ['nullable', 'string', 'max:100'],
+
+            'tariffs'   => ['nullable', 'array'],
+            'tariffs.*' => ['integer', 'distinct', 'exists:tariffs,id'],
         ];
+        // Ціна обов'язкова для кожного обраного тарифу
+        foreach ((array) $this->input('tariffs', []) as $id) {
+            $rules["prices.$id"] = ['required', 'numeric', 'min:0', 'max:99999999.99'];
+        }
+
+        return $rules;
     }
 
     public function attributes(): array
@@ -54,6 +63,15 @@ class FlightRequest extends FormRequest
         return [
             'arrival_airport.different'   => 'Аеропорт прибуття має відрізнятися від аеропорту вильоту.',
             'arrival_date.after_or_equal' => 'Дата прибуття не може бути раніше за дату вильоту.',
+
+            'tariffs.array'      => 'Некоректний формат списку тарифів.',
+            'tariffs.*.integer'  => 'Некоректний тариф.',
+            'tariffs.*.exists'   => 'Обрано неіснуючий тариф.',
+            'tariffs.*.distinct' => 'Тариф вказано більше одного разу.',
+            'prices.*.required'  => 'Вкажіть ціну для кожного обраного тарифу.',
+            'prices.*.numeric'   => 'Ціна має бути числом.',
+            'prices.*.min'       => 'Ціна не може бути від’ємною.',
+            'prices.*.max'       => 'Ціна завелика.',
         ];
     }
 }

@@ -20,4 +20,14 @@
         <a href="{{ route('blog.index') }}">Повернутися назад</a>
         <a href="{{ route('blog.edit', $blog) }}" style="margin-left: 15px;">Редагувати</a>
     </div>
+
+    <div class="tags">
+        @forelse ($blog->filters as $filter)
+            <span class="tag">
+            {{ $filter->filter_name }}
+            </span>
+        @empty
+            <span>Міток немає.</span>
+        @endforelse
+    </div>
 @endsection
