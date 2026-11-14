@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Filter;
 class FilterController extends Controller
 {
     /**
@@ -11,7 +11,8 @@ class FilterController extends Controller
      */
     public function index()
     {
-        //
+        $filters = Filter::all();
+        return view('filters.index', compact('filters'));
     }
 
     /**
@@ -19,7 +20,7 @@ class FilterController extends Controller
      */
     public function create()
     {
-        //
+        return view('filters.create');
     }
 
     /**
@@ -27,7 +28,13 @@ class FilterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'filter_name'        => ['required', 'string', 'max:100'],
+            'filter_description' => ['nullable', 'string'],
+        ]);
+        Filter::create($data);
+
+        return redirect()->route('filters.index');
     }
 
     /**
@@ -41,24 +48,32 @@ class FilterController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Filter $filter)
     {
-        //
+        return view('filters.edit', compact('filter'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Filter $filter)
     {
-        //
+        $data = $request->validate([
+            'filter_name'        => ['required', 'string', 'max:100'],
+            'filter_description' => ['nullable', 'string'],
+        ]);
+
+        $filter->update($data);
+
+        return redirect()->route('filters.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Filter $filter)
     {
-        //
+        $filter->delete();
+        return redirect()->route('filters.index');
     }
 }
