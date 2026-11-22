@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Flight extends Model
 {
     protected $fillable = [
@@ -53,5 +53,11 @@ class Flight extends Model
 
         // Якщо перекладу немає взагалі, повертаємо дані з основної таблиці flights
         return $this->{$field};
+    }
+
+    public function tariffs(): BelongsToMany
+    {
+        return $this->belongsToMany(Tariff::class, 'flight_tariff')
+            ->withPivot('price');
     }
 }

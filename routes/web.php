@@ -5,6 +5,7 @@ use App\Http\Controllers\FlightController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\FilterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,3 +45,13 @@ Route::get(
     [BlogController::class, 'admin']
 )->name('blog.admin');
 Route::resource('blog', BlogController::class);
+Route::resource('filters', FilterController::class)
+    ->except(['show']);
+Route::get(
+    '/blog/{blog}/tags',
+    [BlogController::class, 'tags']
+)->name('blog.tags');
+Route::post(
+    '/blog/{blog}/tags',
+    [BlogController::class, 'tagsStore']
+)->name('blog.tags.store');

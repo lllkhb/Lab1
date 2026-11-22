@@ -59,7 +59,7 @@
                placeholder="Наприклад: Boeing 737-800"
                value="{{ old('aircraft_model_en', $enTranslation->aircraft_model ?? '') }}">
         @error('aircraft_model_en')
-        <p class="error" style="color: red;">{$message}</p>
+        <p class="error" style="color: red;">{{$message}}</p>
         @enderror
     </div>
 </fieldset>
@@ -96,3 +96,66 @@
     <p class="error" style="color: red;">{{ $message }}</p>
     @enderror
 </div>
+@php
+    $selectedTariffs = old('tariffs', isset($flight) ? $flight->tariffs->pluck('id')->all() : []);
+    $priceValues = old('prices', isset($flight)
+        ? $flight->tariffs->mapWithKeys(fn ($t) => [$t->id => $t->pivot->price])->all()
+        : []);
+@endphp
+
+<div style="margin: 15px 0;">
+    <label for="tariffs"><strong>Тарифи рейсу</strong></label><br>
+    <select id="tariffs" name="tariffs[]" multiple style="width:100%; max-width:500px;">
+        @foreach ($tariffs as $tariff)
+            <option value="{{ $tariff->id }}" @selected(in_array($tariff->id, $selectedTariffs))>
+                {{ $tariff->name }} ({{ $tariff->class_name }}, {{ $tariff->baggage }})
+            </option>
+        @endforeach
+    </select>
+
+    @foreach ($errors->get('tariffs.*') as $messages)
+        @foreach ($messages as $message)
+            <p class="error" style="color: red;">{{ $message }}</p>
+        @endforeach
+    @endforeach
+    @foreach ($errors->get('prices.*') as $messages)
+        @foreach ($messages as $message)
+            <p class="error" style="color: red;">{{ $message }}</p>
+        @endforeach
+    @endforeach
+
+    <div id="price-fields" style="margin-top: 10px;"></div>
+</div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const prices = @json((object) $priceValues);
+            const $select = $('#tariffs').select2({ placeholder: 'Оберіть тарифи', closeOnSelect: false });
+
+            function renderPrices() {
+                const $box = $('#price-fields').empty();
+                $select.find('option:selected').each(function () {
+                    const id = this.value;
+                    const name = $(this).text().trim().split(' (')[0];
+                    const $label = $('<label style="display:block; margin-bottom:6px;"></label>')
+                        .text('Ціна для «' + name + '», грн: ');
+                    const $input = $('<input type="number" step="0.01" min="0" required>')
+                        .attr('name', 'prices[' + id + ']')
+                        .val(prices[id] ?? '');
+                    $box.append($label.append($input));
+                });
+            }
+
+            $select.on('change', function () {
+                $('#price-fields input').each(function () {
+                    const m = this.name.match(/\[(\d+)\]/);
+                    if (m) prices[m[1]] = this.value;
+                });
+                renderPrices();
+            });
+
+            renderPrices();
+        });
+    </script>
+@endpush
