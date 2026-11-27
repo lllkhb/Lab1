@@ -7,6 +7,7 @@ use App\Models\Flight;
 use App\Models\Tariff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use App\Queries\FlightsFilter;
 
 class FlightController extends Controller
 {
@@ -136,7 +137,34 @@ class FlightController extends Controller
         return redirect()->route('flight.index')
             ->with('success', 'Рейс видалено.');
     }
+    public function admin(Request $request, FlightsFilter $query)
+    {
+        $input = $request->validate([
+            'search'    => ['nullable', 'string', 'max:200'],
+            'number'    => ['nullable', 'integer', 'min:1'],
+            'from'      => ['nullable', 'string', 'max:150'],
+            'to'        => ['nullable', 'string', 'max:150'],
+            'tariff_id' => ['nullable', 'integer', 'exists:tariffs,id'],
+            'dep_from'  => ['nullable', 'date_format:Y-m-d'],
+            'dep_to'    => ['nullable', 'date_format:Y-m-d', 'after_or_equal:dep_from'],
+            'arr_from'  => ['nullable', 'date_format:Y-m-d'],
+            'arr_to'    => ['nullable', 'date_format:Y-m-d', 'after_or_equal:arr_from'],
+            'sort'      => ['nullable', 'string', 'max:30'],
+            'lang'      => ['nullable', 'in:uk,en,de'],
+        ]);
 
+        $flights = $query->apply($input)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('flight.admin', [
+            'flights'           => $flights,
+            'locale'            => $input['lang'] ?? 'uk',
+            'tariffs'           => Tariff::orderBy('name')->pluck('name', 'id'),
+            'departureAirports' => $query->departureAirports(),
+            'arrivalAirports'   => $query->arrivalAirports(),
+        ]);
+    }
     private function syncTariffs(Flight $flight, Request $request): void
     {
         $data = [];

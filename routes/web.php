@@ -7,6 +7,9 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FilterController;
 
+Route::get('/blog/admin', [BlogController::class, 'admin'])
+    ->name('blog.admin');
+Route::resource('blog', BlogController::class);
 Route::get('/', function () {
     return view('welcome');
 });
@@ -27,6 +30,8 @@ Route::view(
     '/contact',
     'site.contact'
 )->name('site.contact');
+Route::get('/flight/admin', [FlightController::class, 'admin'])
+    ->name('flight.admin');
 Route::resource('flight', FlightController::class);
 Route::resource(
     'country',
